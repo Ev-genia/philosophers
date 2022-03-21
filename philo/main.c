@@ -6,11 +6,27 @@
 /*   By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 11:30:05 by mlarra            #+#    #+#             */
-/*   Updated: 2022/03/21 13:42:19 by mlarra           ###   ########.fr       */
+/*   Updated: 2022/03/21 18:01:04 by mlarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+// enum {
+//   N=5,                    // number of philosophers
+//   THINKING=0,             // philosopher is thinking
+//   HUNGRY=1,               // philosopher is trying to get forks
+//   EATING=2,               // philosopher is eating
+// };  
+
+// #define LEFT (i+N-1)%N		// номер левого соседа 
+// i #define RIGHT (i+1)%N      // номер правого соседа i
+
+// int state[N];             // array to keep track of everyone's state
+// std::mutex mutex_;        // mutual exclusion for critical regions
+// std::binary_semaphore s[N]{0, 0, 0, 0, 0}; 
+//                           // one semaphore per philosopher
+// std::mutex mo;            // for synchronized cout
 
 // void test(int i) {        // i: philosopher number, from 0 to N-1
 //   if (state[i] == HUNGRY 
@@ -82,19 +98,43 @@
 //   t4.join();
 // }
 
-void	*ft_philo(t_philo *p)
-{}
+void	ft_init(char **param, t_philo *phil, int nbr)
+{
+	// if (param < 5 || param > 6)
+	// 	return (1);
+	phil->num = nbr;
+	phil->set.time_to_die = ft_atoi(param[2]);
+	phil->set.time_to_eat = ft_atoi(param[3]);
+	phil->set.time_to_sleep = ft_atoi(param[4]);
+	if (param[5])
+		phil->set.each_must_eat = ft_atoi(param[5]);
+}
+
+void	*ft_phil_func(t_philo *p)
+{
+	 
+}
 
 int	main(int ac, char **av)
 {
-	pthread_t	t;
+	pthread_t	*t_ph;
 	int			i;
-	t_philo		ph;
+	t_philo		*ph; //array of philosophers
 
-	if (ac < 5 || ac > 6)
-	{
-		printf("Error: numbers of arguments\n");
+	if (ac < 5 || ac > 6 || av[2] < 0 || av[3] < 0 || av[4] < 0)
 		return (1);
+	// ? t_ph = malloc(sizeof(t_ph) * av[1])
+	i = -1;
+	while (++i < ft_atoi(av[1]))
+	{
+		ft_init(av, &ph[i], i);
+		pthread_create(&t_ph[i], NULL, ft_phil_func, &ph[i]);
 	}
-	pthread_create(&t, NULL, ft_philo, &ph);
+	i = -1;
+	while (++i < av[1])
+		pthread_join(t_ph[i], NULL);
+	i = -1;
+	while (++i < av[1])
+		pthread_detach(t_ph[i]);
+	return (0);
 }

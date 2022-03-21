@@ -6,30 +6,32 @@
 /*   By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 11:30:09 by mlarra            #+#    #+#             */
-/*   Updated: 2022/03/21 13:40:50 by mlarra           ###   ########.fr       */
+/*   Updated: 2022/03/21 17:58:44 by mlarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// enum {
-//   N=5,                    // number of philosophers
-//   THINKING=0,             // philosopher is thinking
-//   HUNGRY=1,               // philosopher is trying to get forks
-//   EATING=2,               // philosopher is eating
-// };  
-
-// #define LEFT (i+N-1)%N		// номер левого соседа 
-// i #define RIGHT (i+1)%N      // номер правого соседа i
 
 #ifndef PHILO_H
 # define PHILO_H
 # include <pthread.h>
 # include <stdio.h>
 
+enum e_state
+{
+	THINKING,
+	HUNGRY,
+	EATING,
+	SLEEPING
+};
+
 typedef struct s_philo
 {
 	int			num;
+	time_t		run_time;
+	int			numbers_of_eats;
+	int			*state; //массив состояний философа
+	t_forks		forks;
 	t_settings	set;
-	t_forks		*forks;
 }	t_philo;
 
 typedef struct s_forks
@@ -43,7 +45,9 @@ typedef struct s_settings
 	time_t	time_to_die;
 	time_t	time_to_eat;
 	time_t	time_to_sleep;
+	int		each_must_eat;
 }	t_settings;
 
+int	ft_atoi(const char *str);
 
 #endif
