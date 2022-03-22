@@ -6,7 +6,7 @@
 /*   By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 11:30:05 by mlarra            #+#    #+#             */
-/*   Updated: 2022/03/21 18:01:04 by mlarra           ###   ########.fr       */
+/*   Updated: 2022/03/22 23:47:04 by mlarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,19 +100,38 @@
 
 void	ft_init(char **param, t_philo *phil, int nbr)
 {
-	// if (param < 5 || param > 6)
-	// 	return (1);
 	phil->num = nbr;
 	phil->set.time_to_die = ft_atoi(param[2]);
 	phil->set.time_to_eat = ft_atoi(param[3]);
 	phil->set.time_to_sleep = ft_atoi(param[4]);
 	if (param[5])
 		phil->set.each_must_eat = ft_atoi(param[5]);
+	else
+		phil->set.each_must_eat = -1;
+	pthread_mutex_init(phil->forks.take_fork, NULL);
+	phil->state = HUNGRY;
 }
 
-void	*ft_phil_func(t_philo *p)
+void	ft_eat(t_philo *mans)
 {
-	 
+	struct timeval	prev_start;
+
+	prev_start = mans->start_time;
+	pthread_mutex_lock(mans->forks.take_fork);
+}
+
+void	*ft_phil_func(void *phil)
+{
+	t_philo			*p;
+
+	p = phil;
+	gettimeofday(&(p->start_time), NULL);
+	while (1)
+	{
+		ft_eat(p);
+		ft_sleep();
+		ft_think();
+	}
 }
 
 int	main(int ac, char **av)
@@ -123,12 +142,11 @@ int	main(int ac, char **av)
 
 	if (ac < 5 || ac > 6 || av[2] < 0 || av[3] < 0 || av[4] < 0)
 		return (1);
-	// ? t_ph = malloc(sizeof(t_ph) * av[1])
 	i = -1;
 	while (++i < ft_atoi(av[1]))
 	{
 		ft_init(av, &ph[i], i);
-		pthread_create(&t_ph[i], NULL, ft_phil_func, &ph[i]);
+		pthread_create(&t_ph[i], NULL, ft_phil_func, (void *)ph);
 	}
 	i = -1;
 	while (++i < av[1])
