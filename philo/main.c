@@ -6,7 +6,7 @@
 /*   By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 11:30:05 by mlarra            #+#    #+#             */
-/*   Updated: 2022/03/22 23:47:04 by mlarra           ###   ########.fr       */
+/*   Updated: 2022/03/23 17:36:00 by mlarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@
 void	ft_init(char **param, t_philo *phil, int nbr)
 {
 	phil->num = nbr;
+	phil->set.n_philos = ft_atoi(param[1]);
 	phil->set.time_to_die = ft_atoi(param[2]);
 	phil->set.time_to_eat = ft_atoi(param[3]);
 	phil->set.time_to_sleep = ft_atoi(param[4]);
@@ -108,29 +109,89 @@ void	ft_init(char **param, t_philo *phil, int nbr)
 		phil->set.each_must_eat = ft_atoi(param[5]);
 	else
 		phil->set.each_must_eat = -1;
-	pthread_mutex_init(phil->forks.take_fork, NULL);
-	phil->state = HUNGRY;
+	// init_forks
+	//{
+	pthread_mutex_init(phil->fork_max->take_fork, NULL);
+	if (phil->num < (phil->num + phil->set.n_philos - 1) % phil->set.n_philos)
+	{
+		phil->fork_min->id = phil->num;
+		phil->fork_max->id = (phil->num + phil->set.n_philos - 1) % phil->set.n_philos;
+	}
+	else
+	{
+		phil->fork_min->id = (phil->num + phil->set.n_philos - 1) % phil->set.n_philos;
+		phil->fork_max->id = phil->num;
+	}
+	//}
+	// phil->state = HUNGRY;
 }
 
-void	ft_eat(t_philo *mans)
+unsigned long	ft_get_time_now(void)
 {
-	struct timeval	prev_start;
+	struct timeval	time;
+	unsigned long	rez;
 
-	prev_start = mans->start_time;
-	pthread_mutex_lock(mans->forks.take_fork);
+	gettimeofday(&time, NULL);
+	rez = time.tv_sec * 1000 + time.tv_usec / 1000;
+	return (rez);
 }
+
+void	ft_eat(t_philo *man)
+{
+	pthread_mutex_lock(man->fork_min->take_fork);
+	printf("%lu %d has taken a fork\n", ft_get_time_now(), man->num);
+	pthread_mutex_lock(man->fork_max->take_fork);
+	printf("%lu %d has taken a fork\n", ft_get_time_now(), man->num);
+	man->start_time = ft_get_time_now();
+	printf("%lu %d is eating\n", ft_get_time_now(), man->num);
+	usleep(man->set.time_to_eat * 1000);
+	pthread_mutex_unlock(man->fork_min->take_fork);
+	pthread_mutex_unlock(man->fork_max->take_fork);
+}
+
+// void	ft_sleep(t_philo *man)
+// {
+// 	printf("%lu %d is sleeping\n", ft_get_time_now(), man->num);
+// 	usleep(man->set.time_to_sleep * 1000);
+// }
 
 void	*ft_phil_func(void *phil)
 {
-	t_philo			*p;
+	t_philo	*p;
+	int		i;
 
 	p = phil;
-	gettimeofday(&(p->start_time), NULL);
-	while (1)
+	p->start_time = ft_get_time_now();
+	i = 0;
+	while (i < p->set.each_must_eat || p->set.each_must_eat == -1)
 	{
 		ft_eat(p);
-		ft_sleep();
-		ft_think();
+		// ft_sleep(p);
+		printf("%lu %d is sleeping\n", ft_get_time_now(), p->num);
+		usleep(p->set.time_to_sleep * 1000);
+		printf("%lu %d is thinking\n", ft_get_time_now(), p->num);
+		i++;
+	}
+	return ((void *) 0);
+}
+
+void	ft_control_life(t_philo *ph)
+{
+	int	i;
+	int	total;
+
+	i = 0;
+	total = ph[0].set.n_philos;
+	while (i != total)
+	{
+		if ((ft_get_time_now() - ph[i].start_time) > ph[i].set.time_to_die)
+		{
+			printf("%lu %d died\n", ft_get_time_now(), ph[i].num);
+			return ;
+		}
+		i++;
+		if (i == total)
+			i = 0;
 	}
 }
 
@@ -146,13 +207,16 @@ int	main(int ac, char **av)
 	while (++i < ft_atoi(av[1]))
 	{
 		ft_init(av, &ph[i], i);
-		pthread_create(&t_ph[i], NULL, ft_phil_func, (void *)ph);
+		pthread_create(&t_ph[i], NULL, ft_phil_func, (void *)&ph[i]);
+		// usleep();
 	}
+	ft_control_life(ph);
 	i = -1;
-	while (++i < av[1])
-		pthread_join(t_ph[i], NULL);
-	i = -1;
-	while (++i < av[1])
+	while (++i < ft_atoi(av[1]))
 		pthread_detach(t_ph[i]);
+	i = -1;
+	while (++i < ft_atoi(av[1]))
+		pthread_mutex_destroy(ph[i].fork_max->take_fork);
+	// ft_free();
 	return (0);
 }
