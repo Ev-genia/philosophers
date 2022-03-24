@@ -6,7 +6,7 @@
 /*   By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 11:30:09 by mlarra            #+#    #+#             */
-/*   Updated: 2022/03/23 17:28:39 by mlarra           ###   ########.fr       */
+/*   Updated: 2022/03/24 12:23:14 by mlarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <stdio.h>
 # include <sys/time.h>
 # include <unistd.h>
+# include <stdlib.h>
 
 // enum e_state
 // {
@@ -26,11 +27,11 @@
 // 	SLEEPING
 // };
 
-typedef struct s_forks
-{
-	int				id;
-	pthread_mutex_t	*take_fork;
-}	t_forks;
+// typedef struct s_forks
+// {
+// 	int				id;
+// 	pthread_mutex_t	*take_fork;
+// }	t_forks;
 
 typedef struct s_settings
 {
@@ -47,8 +48,9 @@ typedef struct s_philo
 	unsigned long	start_time;
 	int				numbers_of_eats;
 	// int				state; // состояния философа
-	t_forks			*fork_min;
-	t_forks			*fork_max;
+	int				fork_min_id;
+	int				fork_max_id;
+	pthread_mutex_t	**forks;
 	t_settings		set;
 }	t_philo;
 
