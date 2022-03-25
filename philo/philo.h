@@ -6,7 +6,7 @@
 /*   By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 11:30:09 by mlarra            #+#    #+#             */
-/*   Updated: 2022/03/24 12:23:14 by mlarra           ###   ########.fr       */
+/*   Updated: 2022/03/25 17:19:17 by mlarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,22 +35,24 @@
 
 typedef struct s_settings
 {
-	int	n_philos;
-	int	time_to_die;
-	int	time_to_eat;
-	int	time_to_sleep;
-	int	each_must_eat;
+	int				n_philos;
+	unsigned long	t_die;
+	unsigned long	t_eat;
+	unsigned long	t_sleep;
+	int				each_must_eat;
 }	t_settings;
 
 typedef struct s_philo
 {
 	int				num;
-	unsigned long	start_time;
+	pthread_t		stream;
+	unsigned long	timer_begin;
 	int				numbers_of_eats;
 	// int				state; // состояния философа
 	int				fork_min_id;
 	int				fork_max_id;
-	pthread_mutex_t	**forks;
+	pthread_mutex_t	*forks;
+	pthread_mutex_t	*mut_print;
 	t_settings		set;
 }	t_philo;
 

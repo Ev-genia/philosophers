@@ -6,7 +6,7 @@
 /*   By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 11:30:05 by mlarra            #+#    #+#             */
-/*   Updated: 2022/03/24 17:42:27 by mlarra           ###   ########.fr       */
+/*   Updated: 2022/03/25 17:35:41 by mlarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,29 +98,29 @@
 //   t4.join();
 // }
 
-void	ft_init(char **param, t_philo *phil, int nbr, pthread_mutex_t **mutx, pthread_mutex_t *mo)
+void	ft_init(char **param, t_philo *phil, int nbr, pthread_mutex_t *mutx, pthread_t thread)
 {
-
 	phil->num = nbr;
-
-printf("phil->num: %d\n", phil->num);
+	phil->stream = thread;
+// printf("phil->num: %d\n", phil->num);
 	phil->set.n_philos = ft_atoi(param[1]);
-	phil->set.time_to_die = ft_atoi(param[2]);
-	phil->set.time_to_eat = ft_atoi(param[3]);
-	phil->set.time_to_sleep = ft_atoi(param[4]);
+	phil->set.t_die = ft_atoi(param[2]);
+	phil->set.t_eat = ft_atoi(param[3]);
+	phil->set.t_sleep = ft_atoi(param[4]);
 	if (param[5])
 		phil->set.each_must_eat = ft_atoi(param[5]);
 	else
 		phil->set.each_must_eat = -1;
 	// init_forks
 	//{
-	// phil->fork_max->take_fork = malloc(sizeof(pthread_mutex_t *));
 
+	phil->mut_print = malloc(sizeof(pthread_mutex_t *));
+	pthread_mutex_init(phil->mut_print, NULL);
 	phil->forks = mutx;
-printf("mutex %d\n", phil->num);
-printf("phil->forks[%d]: %p\n", phil->num, phil->forks[phil->num]);
-	pthread_mutex_init(phil->forks[phil->num], NULL);
-printf("mutex_init %d\n", phil->num);
+// printf("mutex %d\n", phil->num);
+// printf("phil->forks[%d]: %p\n", phil->num, &(phil->forks[phil->num]));
+	pthread_mutex_init(&(phil->forks[phil->num]), NULL);
+// printf("mutex_init %d\n", phil->num);
 	if (phil->num < (phil->num + phil->set.n_philos - 1) % phil->set.n_philos)
 	{
 		phil->fork_min_id = phil->num;
@@ -131,11 +131,11 @@ printf("mutex_init %d\n", phil->num);
 		phil->fork_min_id = (phil->num + phil->set.n_philos - 1) % phil->set.n_philos;
 		phil->fork_max_id = phil->num;
 	}
-printf("phil[%d]->fork_min_id: %d, phil[%d]->fork_max_id: %d\n", phil->num, phil->fork_min_id, phil->num, phil->fork_max_id);
+	phil->numbers_of_eats = 0;
+// printf("phil[%d]->fork_min_id: %d, phil[%d]->fork_max_id: %d\n", phil->num, phil->fork_min_id, phil->num, phil->fork_max_id);
 	//}
 	// phil->state = HUNGRY;
-printf("end ft_init %d\n", phil->num);
-pthread_mutex_unlock(mo);
+// printf("end ft_init %d\n", phil->num);
 }
 
 unsigned long	ft_get_time_now(void)
@@ -150,24 +150,33 @@ unsigned long	ft_get_time_now(void)
 
 void	ft_eat(t_philo *man)
 {
-printf("ft_eat %d\n", man->num);
-printf("man[%d]->fork_min_id: %d, man[%d]->fork_max_id: %d\n", man->num, man->fork_min_id, man->num, man->fork_max_id);
-	pthread_mutex_lock(man->forks[man->fork_min_id]);
+// printf("ft_eat %d\n", man->num);
+// printf("man[%d]->fork_min_id: %d, man[%d]->fork_max_id: %d\n", man->num, man->fork_min_id, man->num, man->fork_max_id);
+	pthread_mutex_lock(&(man->forks[man->fork_min_id]));
+	pthread_mutex_lock(man->mut_print);
 	printf("%lu %d has taken a fork\n", ft_get_time_now(), man->num);
-printf("man->forks[%d]: %p\n", man->num, man->forks[man->num]);
-	pthread_mutex_lock(man->forks[man->fork_max_id]);
+	pthread_mutex_unlock(man->mut_print);
+// printf("man->forks[%d]: %p\n", man->num, &(man->forks[man->num]));
+	pthread_mutex_lock(&(man->forks[man->fork_max_id]));
+	pthread_mutex_lock(man->mut_print);
 	printf("%lu %d has taken a fork\n", ft_get_time_now(), man->num);
-	man->start_time = ft_get_time_now();
+	pthread_mutex_unlock(man->mut_print);
+	man->timer_begin = ft_get_time_now();
+	pthread_mutex_lock(man->mut_print);
 	printf("%lu %d is eating\n", ft_get_time_now(), man->num);
-	usleep(man->set.time_to_eat * 1000);
-	pthread_mutex_unlock(man->forks[man->fork_min_id]);
-	pthread_mutex_unlock(man->forks[man->fork_max_id]);
+	pthread_mutex_unlock(man->mut_print);
+	usleep(man->set.t_eat * 1000);
+	man->numbers_of_eats++;
+	pthread_mutex_unlock(&(man->forks[man->fork_min_id]));
+	pthread_mutex_unlock(&(man->forks[man->fork_max_id]));
 }
 
 void	ft_sleep(t_philo *man)
 {
+	// pthread_mutex_lock(man->mut_print);
 	printf("%lu %d is sleeping\n", ft_get_time_now(), man->num);
-	usleep(man->set.time_to_sleep * 1000);
+	// pthread_mutex_unlock(man->mut_print);
+	usleep(man->set.t_sleep * 1000);
 }
 
 void	*ft_phil_func(void *phil)
@@ -176,8 +185,8 @@ void	*ft_phil_func(void *phil)
 	int		i;
 
 	p = phil;
-printf("ft_phil_func %d\n", p->num);
-	p->start_time = ft_get_time_now();
+// printf("ft_phil_func %d\n", p->num);
+	p->timer_begin = ft_get_time_now();
 	i = 0;
 	while (i < p->set.each_must_eat || p->set.each_must_eat == -1)
 	{
@@ -185,29 +194,90 @@ printf("ft_phil_func %d\n", p->num);
 		ft_sleep(p);
 		// printf("%lu %d is sleeping\n", ft_get_time_now(), p->num);
 		// usleep(p->set.time_to_sleep * 1000);
+		// pthread_mutex_lock(p->mut_print);
 		printf("%lu %d is thinking\n", ft_get_time_now(), p->num);
+		// pthread_mutex_unlock(p->mut_print);
 		i++;
 	}
 	return ((void *) 0);
 }
 
-void	ft_control_life(t_philo *ph)
+// void	ft_control_life(t_philo *ph)
+// {
+// 	int	i;
+// 	int	total;
+
+// 	i = 0;
+// 	total = ph[0].set.n_philos;
+// 	while (i != total)
+// 	{
+// 		if ((ft_get_time_now() - ph[i].timer_begin) > ph[i].set.t_die)
+// 		{
+// 			printf("%lu %d died\n", ft_get_time_now(), ph[i].num);
+// 			return ;
+// 		}
+		
+// 		i++;
+// 		if (i == total)
+// 			i = 0;
+// 	}
+// }
+
+void	*ft_control_life(void *phil)
 {
 	int	i;
 	int	total;
+	t_philo *ph;
 
+	ph = phil;
 	i = 0;
 	total = ph[0].set.n_philos;
 	while (i != total)
 	{
-		if ((ft_get_time_now() - ph[i].start_time) > ph[i].set.time_to_die)
+		if ((ft_get_time_now() - ph[i].timer_begin) > ph[i].set.t_die)
 		{
+			pthread_mutex_lock(ph[i].mut_print);
 			printf("%lu %d died\n", ft_get_time_now(), ph[i].num);
-			return ;
+			pthread_mutex_unlock(ph[i].mut_print);
+
+			i = -1;
+			while (++i < ph->set.n_philos)
+				pthread_detach(ph[i].stream);
+
+			return ((void *) 0);
 		}
+		
 		i++;
 		if (i == total)
 			i = 0;
+	}
+	return ((void *) 0);
+}
+
+void	ft_control_eat(t_philo *ph)
+{
+	int	i;
+	int	total;
+	int	eats;
+
+	i = 0;
+	
+	total = ph[0].set.n_philos;
+	while (1)//i != total)
+	{
+		i = 0;
+		eats = 0;
+		while (i < total)
+		{
+			if (ph[i].numbers_of_eats >= ph[i].set.each_must_eat)
+				eats++;
+			i++;
+		}
+		if (eats == total)
+			return ;
+		// i++;
+		// if (i == total)
+		// 	i = 0;
 	}
 }
 
@@ -259,74 +329,72 @@ int	main(int ac, char **av)
 	int			i;
 	t_philo		*ph;// array of philosophers
 	pthread_mutex_t	*mtx;// array of mutex
-pthread_mutex_t	*table;
+	pthread_t	*t_life;
 
-	// if (ac < 5 || ac > 6 || ft_atoi(av[2]) <= 0 || ft_atoi(av[3]) <= 0 || ft_atoi(av[4]) <= 0)
 	if (ft_check_args(ac, av) != 0)
 	{
 printf("Error arguments\n");
 		return (1);
 	}
 
-	
-// 	t_ph = malloc(sizeof(pthread_t) * ft_atoi(av[1]));
-// 	if (!t_ph)
-// 	{
-// printf("Error pthread malloc\n");
-// 		return (1);
-// 	}
-// 	ph = malloc(sizeof(t_philo) * ft_atoi(av[1]));
-// 	if (!ph)
-// 	{
-// 		free(t_ph);
-// printf("Error philosophers malloc\n");
-// 		return (1);
-// 	}
-// 	mtx = malloc(sizeof(pthread_mutex_t) *  ft_atoi(av[1]));
-// 	if (!mtx)
-// 	{
-// 		free(ph);
-// 		free(t_ph);
-// printf("Error mutex malloc\n");
-// 		return (1);
-// 	}
 	if (ft_check_malloc(&t_ph, &ph, &mtx, av) != 0)
 		return (1);
-
-pthread_mutex_init(table, NULL);
 
 	i = 0;
 	while (i < ft_atoi(av[1]))
 	{
-pthread_mutex_lock(table);
-printf("test %d\n", i);
-		ft_init(av, &ph[i], i, &mtx, table);
-		if (i % 2 == 1)
-			ft_sleep(&ph[i]);
-		// pthread_create(&t_ph[i], NULL, ft_phil_func, (void *) &ph[i]);
-
-		if (pthread_create(&t_ph[i], NULL, ft_phil_func, (void *) &ph[i]) == 0)
-			printf("-> yes, pthread_create\n");
-		else
-			printf("-> no, pthread_no_create\n");
-			
-printf("test_sleep50\n");
-		// usleep(50);
+		ft_init(av, &ph[i], i, mtx, t_ph[i]);
 		i++;
 	}
 
-	ft_control_life(ph);
+	i = 0;
+	while (i < ft_atoi(av[1]))
+	{
+// printf("test %d\n", i);
+		// ft_init(av, &ph[i], i, &mtx);
+		if (i % 2 == 1)
+			ft_sleep(&ph[i]);
+		pthread_create(&t_ph[i], NULL, ft_phil_func, (void *) &ph[i]);
+
+		// if (pthread_create(&t_ph[i], NULL, ft_phil_func, (void *) &ph[i]) == 0)
+		// 	printf("-> yes, pthread_create\n");
+		// else
+		// 	printf("-> no, pthread_no_create\n");
+			
+// printf("test_sleep50\n");
+		// usleep(50);
+		i++;
+	}
+	
+	// if (av[5])
+	// {	ft_control_eat(ph);
+	// 	printf("Each philosopher eats %d \n", ph[0].set.each_must_eat);
+	// }
+	// else
+	// 	ft_control_life(ph);
+	
+	t_life = (pthread_t *) malloc(sizeof(pthread_t));
+	pthread_create(t_life, NULL, ft_control_life, (void *) ph);
+	// if (av[5])
+	// 	ft_control_eat(ph);
 
 	i = -1;
 	while (++i < ft_atoi(av[1]))
-		pthread_mutex_destroy(ph[i].forks[ph->fork_max_id]);
+	{
+		pthread_mutex_destroy(&(ph[i].forks[ph->fork_max_id]));
+		pthread_mutex_destroy(ph[i].mut_print);
+	}
 
 	i = -1;
 	while (++i < ft_atoi(av[1]))
 		pthread_detach(t_ph[i]);
 
+	
+	pthread_detach(*t_life);
+	free(t_life);
+
 	// ft_free(ph);
-	free(*(ph->forks));
+	free(ph->forks);
 	free(ph);
 	free(t_ph);
 	return (0);
