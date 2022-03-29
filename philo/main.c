@@ -6,7 +6,7 @@
 /*   By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 11:30:05 by mlarra            #+#    #+#             */
-/*   Updated: 2022/03/25 17:35:41 by mlarra           ###   ########.fr       */
+/*   Updated: 2022/03/28 17:40:22 by mlarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,9 +98,23 @@
 //   t4.join();
 // }
 
+void	ft_write(int out, char *s)//2, "Error arguments\n")
+{
+	int	i;
+
+	i = 0;
+	while (s[i])
+	{
+		write(out, &s[i], 1);
+		i++;
+	}
+	write(out, "\n", 1);
+}
+
 void	ft_init(char **param, t_philo *phil, int nbr, pthread_mutex_t *mutx, pthread_t thread)
 {
 	phil->num = nbr;
+	phil->name = phil->num + 1;
 	phil->stream = thread;
 // printf("phil->num: %d\n", phil->num);
 	phil->set.n_philos = ft_atoi(param[1]);
@@ -153,18 +167,18 @@ void	ft_eat(t_philo *man)
 // printf("ft_eat %d\n", man->num);
 // printf("man[%d]->fork_min_id: %d, man[%d]->fork_max_id: %d\n", man->num, man->fork_min_id, man->num, man->fork_max_id);
 	pthread_mutex_lock(&(man->forks[man->fork_min_id]));
-	pthread_mutex_lock(man->mut_print);
-	printf("%lu %d has taken a fork\n", ft_get_time_now(), man->num);
-	pthread_mutex_unlock(man->mut_print);
+	// pthread_mutex_lock(man->mut_print);
+	printf("%lu %d has taken a fork\n", ft_get_time_now(), man->name);
+	// pthread_mutex_unlock(man->mut_print);
 // printf("man->forks[%d]: %p\n", man->num, &(man->forks[man->num]));
 	pthread_mutex_lock(&(man->forks[man->fork_max_id]));
-	pthread_mutex_lock(man->mut_print);
-	printf("%lu %d has taken a fork\n", ft_get_time_now(), man->num);
-	pthread_mutex_unlock(man->mut_print);
+	// pthread_mutex_lock(man->mut_print);
+	printf("%lu %d has taken a fork\n", ft_get_time_now(), man->name);
+	// pthread_mutex_unlock(man->mut_print);
 	man->timer_begin = ft_get_time_now();
-	pthread_mutex_lock(man->mut_print);
-	printf("%lu %d is eating\n", ft_get_time_now(), man->num);
-	pthread_mutex_unlock(man->mut_print);
+	// pthread_mutex_lock(man->mut_print);
+	printf("%lu %d is eating\n", ft_get_time_now(), man->name);
+	// pthread_mutex_unlock(man->mut_print);
 	usleep(man->set.t_eat * 1000);
 	man->numbers_of_eats++;
 	pthread_mutex_unlock(&(man->forks[man->fork_min_id]));
@@ -174,9 +188,14 @@ void	ft_eat(t_philo *man)
 void	ft_sleep(t_philo *man)
 {
 	// pthread_mutex_lock(man->mut_print);
-	printf("%lu %d is sleeping\n", ft_get_time_now(), man->num);
+	printf("%lu %d is sleeping\n", ft_get_time_now(), man->name);
 	// pthread_mutex_unlock(man->mut_print);
 	usleep(man->set.t_sleep * 1000);
+}
+
+void	ft_think(t_philo *man)
+{
+	printf("%lu %d is thinking\n", ft_get_time_now(), man->name);
 }
 
 void	*ft_phil_func(void *phil)
@@ -194,9 +213,12 @@ void	*ft_phil_func(void *phil)
 		ft_sleep(p);
 		// printf("%lu %d is sleeping\n", ft_get_time_now(), p->num);
 		// usleep(p->set.time_to_sleep * 1000);
+
 		// pthread_mutex_lock(p->mut_print);
-		printf("%lu %d is thinking\n", ft_get_time_now(), p->num);
+		// printf("%lu %d is thinking\n", ft_get_time_now(), p->name);
 		// pthread_mutex_unlock(p->mut_print);
+		ft_think(p);
+
 		i++;
 	}
 	return ((void *) 0);
@@ -236,13 +258,13 @@ void	*ft_control_life(void *phil)
 	{
 		if ((ft_get_time_now() - ph[i].timer_begin) > ph[i].set.t_die)
 		{
-			pthread_mutex_lock(ph[i].mut_print);
-			printf("%lu %d died\n", ft_get_time_now(), ph[i].num);
-			pthread_mutex_unlock(ph[i].mut_print);
+			// pthread_mutex_lock(ph[i].mut_print);
+			printf("%lu %d died\n", ft_get_time_now(), ph[i].name);
+			// pthread_mutex_unlock(ph[i].mut_print);
 
-			i = -1;
-			while (++i < ph->set.n_philos)
-				pthread_detach(ph[i].stream);
+			// i = -1;
+			// while (++i < ph->set.n_philos)
+			// 	pthread_detach(ph[i].stream);
 
 			return ((void *) 0);
 		}
@@ -284,14 +306,17 @@ void	ft_control_eat(t_philo *ph)
 int	ft_check_args(int argc, char **argv)
 {
 	int	i;
-
+// printf("check_args\n");
 	if (argc < 5 || argc > 6)
 		return (1);
-	i = 2;
-	while(argv[i])
+	i = 1;
+	while(i < argc)//argv[i])
 	{
+// printf("ft_atoi(%s): %lld\n", argv[i], ft_atoi(argv[i]));
 		if (ft_atoi(argv[i]) <= 0)
-			return (1);
+		{
+
+			return (1);}
 		i++;
 	}
 	return (0);
@@ -302,14 +327,16 @@ int	ft_check_malloc(pthread_t **stream, t_philo **philosophers, pthread_mutex_t 
 	*stream = malloc(sizeof(pthread_t) * ft_atoi(arv[1]));
 	if (!(*stream))
 	{
-printf("Error pthread malloc\n");
+// printf("Error pthread malloc\n");
+ft_write(2, "Error pthread malloc");
 		return (1);
 	}
 	*philosophers = malloc(sizeof(t_philo) * ft_atoi(arv[1]));
 	if (!(*philosophers))
 	{
 		free(*stream);
-printf("Error philosophers malloc\n");
+// printf("Error philosophers malloc\n");
+ft_write(2, "Error philosophers malloc");
 		return (1);
 	}
 	*forks = malloc(sizeof(pthread_mutex_t) *  ft_atoi(arv[1]));
@@ -317,7 +344,8 @@ printf("Error philosophers malloc\n");
 	{
 		free(*philosophers);
 		free(*stream);
-printf("Error mutex malloc\n");
+// printf("Error mutex malloc\n");
+ft_write(2, "Error mutex malloc");
 		return (1);
 	}
 	return (0);
@@ -329,11 +357,12 @@ int	main(int ac, char **av)
 	int			i;
 	t_philo		*ph;// array of philosophers
 	pthread_mutex_t	*mtx;// array of mutex
-	pthread_t	*t_life;
+	// pthread_t	*t_life;
 
 	if (ft_check_args(ac, av) != 0)
 	{
-printf("Error arguments\n");
+		ft_write(2, "Error arguments");
+// printf("Error arguments\n");
 		return (1);
 	}
 
@@ -353,7 +382,8 @@ printf("Error arguments\n");
 // printf("test %d\n", i);
 		// ft_init(av, &ph[i], i, &mtx);
 		if (i % 2 == 1)
-			ft_sleep(&ph[i]);
+			// ft_sleep(&ph[i]);
+			ft_think(&ph[i]);
 		pthread_create(&t_ph[i], NULL, ft_phil_func, (void *) &ph[i]);
 
 		// if (pthread_create(&t_ph[i], NULL, ft_phil_func, (void *) &ph[i]) == 0)
@@ -371,10 +401,10 @@ printf("Error arguments\n");
 	// 	printf("Each philosopher eats %d \n", ph[0].set.each_must_eat);
 	// }
 	// else
-	// 	ft_control_life(ph);
+		ft_control_life(ph);
 	
-	t_life = (pthread_t *) malloc(sizeof(pthread_t));
-	pthread_create(t_life, NULL, ft_control_life, (void *) ph);
+	// t_life = (pthread_t *) malloc(sizeof(pthread_t));
+	// pthread_create(t_life, NULL, ft_control_life, (void *) ph);
 	// if (av[5])
 	// 	ft_control_eat(ph);
 
@@ -382,7 +412,7 @@ printf("Error arguments\n");
 	while (++i < ft_atoi(av[1]))
 	{
 		pthread_mutex_destroy(&(ph[i].forks[ph->fork_max_id]));
-		pthread_mutex_destroy(ph[i].mut_print);
+		// pthread_mutex_destroy(ph[i].mut_print);
 	}
 
 	i = -1;
@@ -390,8 +420,8 @@ printf("Error arguments\n");
 		pthread_detach(t_ph[i]);
 
 	
-	pthread_detach(*t_life);
-	free(t_life);
+	// pthread_detach(*t_life);
+	// free(t_life);
 
 	// ft_free(ph);
 	free(ph->forks);

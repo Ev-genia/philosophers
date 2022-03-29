@@ -6,7 +6,7 @@
 #    By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/21 14:48:13 by mlarra            #+#    #+#              #
-#    Updated: 2022/03/25 11:49:55 by mlarra           ###   ########.fr        #
+#    Updated: 2022/03/28 16:43:43 by mlarra           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -53,7 +53,7 @@
 # norm	:
 # 	norminette ${SOURCES} ${HEADER}
 
-NAME	=	philo
+NAME	=	philo_one
 
 SRC		=	main.c	ft_atoi.c
 

@@ -6,7 +6,7 @@
 /*   By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 11:30:09 by mlarra            #+#    #+#             */
-/*   Updated: 2022/03/25 17:19:17 by mlarra           ###   ########.fr       */
+/*   Updated: 2022/03/28 17:37:02 by mlarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ typedef struct s_settings
 typedef struct s_philo
 {
 	int				num;
+	int				name;
 	pthread_t		stream;
 	unsigned long	timer_begin;
 	int				numbers_of_eats;
@@ -56,6 +57,6 @@ typedef struct s_philo
 	t_settings		set;
 }	t_philo;
 
-int	ft_atoi(const char *str);
+long long int	ft_atoi(const char *str);
 
 #endif
