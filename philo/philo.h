@@ -5,58 +5,78 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/21 11:30:09 by mlarra            #+#    #+#             */
-/*   Updated: 2022/03/28 17:37:02 by mlarra           ###   ########.fr       */
+/*   Created: 2022/04/27 12:59:25 by mlarra            #+#    #+#             */
+/*   Updated: 2022/04/28 17:34:56 by mlarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #ifndef PHILO_H
 # define PHILO_H
-# include <pthread.h>
-# include <stdio.h>
-# include <sys/time.h>
-# include <unistd.h>
 # include <stdlib.h>
+# include <stdio.h>
+# include <pthread.h>
+# include <unistd.h>
+# include <sys/time.h>
 
-// enum e_state
-// {
-// 	THINKING,
-// 	HUNGRY,
-// 	EATING,
-// 	SLEEPING
-// };
-
-// typedef struct s_forks
-// {
-// 	int				id;
-// 	pthread_mutex_t	*take_fork;
-// }	t_forks;
-
-typedef struct s_settings
+typedef long long int llint;
+typedef pthread_mutex_t t_mutex;
+typedef struct s_set//settings
 {
-	int				n_philos;
-	unsigned long	t_die;
-	unsigned long	t_eat;
-	unsigned long	t_sleep;
-	int				each_must_eat;
-}	t_settings;
+	llint		n_phs;
+	llint		t_die;
+	llint		t_eat;
+	llint		t_sleep;
+	int			must_eat;
+	t_mutex		*forks;
+	t_mutex		mutex_print;
+	pthread_t	thread_live;
+}	t_set;
 
-typedef struct s_philo
+typedef struct s_one_philo//struct of one philosopher
 {
-	int				num;
-	int				name;
-	pthread_t		stream;
-	unsigned long	timer_begin;
-	int				numbers_of_eats;
-	// int				state; // состояния философа
-	int				fork_min_id;
-	int				fork_max_id;
-	pthread_mutex_t	*forks;
-	pthread_mutex_t	*mut_print;
-	t_settings		set;
-}	t_philo;
+	int			name;
+	int			num;
+	llint		time_start;
+	int			l_fork_id;
+	int			r_fork_id;
+	int			total_eat;
+	t_set		*set;//pointer to settings
+	pthread_t	*thread_ph;
+	t_mutex		eat;
+}	t_one_philo;
 
-long long int	ft_atoi(const char *str);
+typedef struct s_philos
+{
+	t_mutex		general_mutex;
+	t_one_philo	*phs[200];//array of pointer of philosophers
+	t_set		*set;//pointer to settings
+}	t_philos;
+
+long long int  ft_atoi(const char *str);
+
+void	ft_print_think(t_one_philo *p);
+void	ft_print_sleep(t_one_philo *p);
+void	ft_print_eat(t_one_philo *p);
+void	ft_print_forks(t_one_philo *p);
+void	ft_print_die(t_one_philo *p);
+void	ft_print(int out, char *s);
+
+void	ft_philo_think(t_one_philo *p);
+void	ft_philo_sleep(t_one_philo *ph);
+
+void	ft_take_forks(t_one_philo *philo);
+
+unsigned long	ft_get_time_now(void);
+
+void	ft_init_set(t_philos *philos, char **av);
+void	ft_init_phs(t_one_philo *one_ph, int i, t_set *sett);
+
+int	ft_check_arg(int ac, char **av);
+t_philos	*ft_check_malloc(char **av);
+void	*ft_check_must_eat(void *ph);
+void	*ft_check_live(void *philo);
+
+void	ft_print(int out, char *s);
+unsigned long	ft_get_time_now(void);
 
 #endif
