@@ -6,7 +6,7 @@
 /*   By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 12:59:25 by mlarra            #+#    #+#             */
-/*   Updated: 2022/04/28 17:34:56 by mlarra           ###   ########.fr       */
+/*   Updated: 2022/05/19 16:39:02 by mlarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ typedef struct s_set//settings
 	llint		t_eat;
 	llint		t_sleep;
 	int			must_eat;
+	int			life;
 	t_mutex		*forks;
 	t_mutex		mutex_print;
 	pthread_t	thread_live;
@@ -48,7 +49,7 @@ typedef struct s_one_philo//struct of one philosopher
 typedef struct s_philos
 {
 	t_mutex		general_mutex;
-	t_one_philo	*phs[200];//array of pointer of philosophers
+	t_one_philo	phs[200];//array of pointer of philosophers
 	t_set		*set;//pointer to settings
 }	t_philos;
 
@@ -73,10 +74,12 @@ void	ft_init_phs(t_one_philo *one_ph, int i, t_set *sett);
 
 int	ft_check_arg(int ac, char **av);
 t_philos	*ft_check_malloc(char **av);
-void	*ft_check_must_eat(void *ph);
+// void	*ft_check_must_eat(void *ph);
 void	*ft_check_live(void *philo);
 
 void	ft_print(int out, char *s);
 unsigned long	ft_get_time_now(void);
+
+void	ft_free_all(t_philos *phls);
 
 #endif

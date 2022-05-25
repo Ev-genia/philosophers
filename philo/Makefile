@@ -6,7 +6,7 @@
 #    By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/21 14:48:13 by mlarra            #+#    #+#              #
-#    Updated: 2022/04/28 17:35:18 by mlarra           ###   ########.fr        #
+#    Updated: 2022/05/01 13:20:08 by mlarra           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,8 +55,8 @@
 
 NAME	=	philo_one
 
-SRC		=	main.c	ft_atoi.c	ft_sleep.c	ft_think.c	ft_print.c	ft_check.c\
-			ft_ulils.c
+SRC		=	main.c	ft_atoi.c	ft_check.c	ft_free.c	ft_init.c\
+			ft_print.c	ft_sleep.c	ft_think.c	ft_utils.c
 
 HEADER	=	philo.h
 
