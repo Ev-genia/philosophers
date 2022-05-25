@@ -6,7 +6,7 @@
 /*   By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 12:59:25 by mlarra            #+#    #+#             */
-/*   Updated: 2022/05/19 16:39:02 by mlarra           ###   ########.fr       */
+/*   Updated: 2022/05/25 23:55:10 by mlarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,13 +43,13 @@ typedef struct s_one_philo//struct of one philosopher
 	int			total_eat;
 	t_set		*set;//pointer to settings
 	pthread_t	*thread_ph;
-	t_mutex		eat;
+	// t_mutex		eat;
 }	t_one_philo;
 
 typedef struct s_philos
 {
 	t_mutex		general_mutex;
-	t_one_philo	phs[200];//array of pointer of philosophers
+	t_one_philo	*phs;//[200];//array of pointer of philosophers
 	t_set		*set;//pointer to settings
 }	t_philos;
 
@@ -64,6 +64,7 @@ void	ft_print(int out, char *s);
 
 void	ft_philo_think(t_one_philo *p);
 void	ft_philo_sleep(t_one_philo *ph);
+void	ft_usleep_fix(unsigned long time);
 
 void	ft_take_forks(t_one_philo *philo);
 
@@ -74,7 +75,6 @@ void	ft_init_phs(t_one_philo *one_ph, int i, t_set *sett);
 
 int	ft_check_arg(int ac, char **av);
 t_philos	*ft_check_malloc(char **av);
-// void	*ft_check_must_eat(void *ph);
 void	*ft_check_live(void *philo);
 
 void	ft_print(int out, char *s);

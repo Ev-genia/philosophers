@@ -6,7 +6,7 @@
 #    By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/21 14:48:13 by mlarra            #+#    #+#              #
-#    Updated: 2022/05/01 13:20:08 by mlarra           ###   ########.fr        #
+#    Updated: 2022/05/25 11:07:26 by mlarra           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -53,7 +53,7 @@
 # norm	:
 # 	norminette ${SOURCES} ${HEADER}
 
-NAME	=	philo_one
+NAME	=	philo
 
 SRC		=	main.c	ft_atoi.c	ft_check.c	ft_free.c	ft_init.c\
 			ft_print.c	ft_sleep.c	ft_think.c	ft_utils.c
