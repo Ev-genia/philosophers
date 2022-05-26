@@ -6,7 +6,7 @@
 /*   By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 11:56:39 by mlarra            #+#    #+#             */
-/*   Updated: 2022/05/01 16:21:09 by mlarra           ###   ########.fr       */
+/*   Updated: 2022/05/26 11:13:24 by mlarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,6 @@ long long int  ft_atoi(const char *str)
     number = number * 10 + (*str - '0');
 	if (rez > number)
 		return (0);
-    // if (number > 9223372036854775807 && sign == 1)
-    //   return (-1);
-    // if (number > 9223372036854775807 && sign == -1)
-    //   return (0);
     str++;
   }
   return (number * sign);

@@ -6,7 +6,7 @@
 /*   By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 12:59:25 by mlarra            #+#    #+#             */
-/*   Updated: 2022/05/25 23:55:10 by mlarra           ###   ########.fr       */
+/*   Updated: 2022/05/26 15:33:09 by mlarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ typedef struct s_set//settings
 	int			life;
 	t_mutex		*forks;
 	t_mutex		mutex_print;
+	t_mutex		mutex_life;
+	t_mutex		mutex_t_start;
 	pthread_t	thread_live;
 }	t_set;
 
@@ -76,8 +78,10 @@ void	ft_init_phs(t_one_philo *one_ph, int i, t_set *sett);
 int	ft_check_arg(int ac, char **av);
 t_philos	*ft_check_malloc(char **av);
 void	*ft_check_live(void *philo);
+int	ft_validate_life(t_set *sett);
 
 void	ft_print(int out, char *s);
+void	ft_print_logs(t_one_philo *p, char *str);
 unsigned long	ft_get_time_now(void);
 
 void	ft_free_all(t_philos *phls);

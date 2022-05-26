@@ -6,7 +6,7 @@
 /*   By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 12:59:31 by mlarra            #+#    #+#             */
-/*   Updated: 2022/05/26 00:03:55 by mlarra           ###   ########.fr       */
+/*   Updated: 2022/05/26 15:41:37 by mlarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,23 +24,17 @@ void	ft_usleep_fix(unsigned long time)
 void	ft_take_forks(t_one_philo *philo)
 {
 	pthread_mutex_lock(&(philo->set->forks[philo->l_fork_id]));
-// printf("num_philo: %d, philo->l_fork_id = %d\n", philo->name, philo->l_fork_id);
-	ft_print_forks(philo);
+	ft_print_logs(philo, "has taken a fork");
 	pthread_mutex_lock(&(philo->set->forks[philo->r_fork_id]));
-// printf("num_philo: %d, philo->r_fork_id = %d\n", philo->name, philo->r_fork_id);
-	ft_print_forks(philo);
+	ft_print_logs(philo, "has taken a fork");
+	pthread_mutex_lock(&philo->set->mutex_t_start);
 	philo->time_start = ft_get_time_now();
-	ft_print_eat(philo);
-	// usleep(philo->set->t_eat * 1000);
+	pthread_mutex_unlock(&philo->set->mutex_t_start);
+	ft_print_logs(philo, "is eating");
 	ft_usleep_fix(philo->set->t_eat);
 	philo->total_eat++;
 	pthread_mutex_unlock(&(philo->set->forks[philo->l_fork_id]));
-// printf("philo->name = %d put l_fork = %d\n", philo->name, philo->l_fork_id);
 	pthread_mutex_unlock(&(philo->set->forks[philo->r_fork_id]));
-// printf("philo->name = %d put r_fork = %d\n", philo->name, philo->r_fork_id);
-	// if (philo->set->must_eat != -1 && philo->total_eat == philo->set->must_eat)
-	// 	return ;
-	// ft_philo_sleep(philo);
 }
 
 void	*ft_start_philo(void *p)
@@ -51,8 +45,13 @@ void	*ft_start_philo(void *p)
 	ph->time_start = ft_get_time_now();
 	while (1)
 	{
-// printf("*ft_start_philo -> ph->set->life = %d\n", ph->set->life);
-		if (ph->set->life != 1)
+		// pthread_mutex_lock(&ph->set->mutex_life);
+		// if (ph->set->life != 1)
+			// {pthread_mutex_unlock(&ph->set->mutex_life);
+				// return (NULL);
+				// }
+		// pthread_mutex_unlock(&ph->set->mutex_life);
+		if (ft_validate_life(ph->set) == 0)
 			return (NULL);
 		ft_take_forks(ph);
 		if (ph->set->must_eat != -1 && ph->total_eat == ph->set->must_eat)
@@ -120,6 +119,7 @@ void	ft_detach_threads(t_philos *p)
 int	main(int argc, char **argv)
 {
 	t_philos	*phils;
+	int			i;
 
 	if (ft_check_arg(argc, argv) != 0)
 	{
@@ -134,9 +134,16 @@ int	main(int argc, char **argv)
 	}
 	ft_init_set(phils, argv);
 	ft_create_threads(phils);
-	pthread_mutex_lock(&phils->general_mutex);
-	pthread_mutex_unlock(&phils->general_mutex);
-	ft_detach_threads(phils);
+	// pthread_mutex_lock(&phils->general_mutex);
+	// pthread_mutex_unlock(&phils->general_mutex);
+	// ft_detach_threads(phils);
+	i = 0;
+	while (i < phils->set->n_phs)
+	{
+		pthread_join(*phils->phs[i].thread_ph, NULL);
+		i++;
+	}
+	pthread_join(phils->set->thread_live, NULL);
 	ft_free_all(phils);
 	return (0);
 }

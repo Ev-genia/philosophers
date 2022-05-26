@@ -6,7 +6,7 @@
 /*   By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/28 16:01:40 by mlarra            #+#    #+#             */
-/*   Updated: 2022/05/25 23:40:23 by mlarra           ###   ########.fr       */
+/*   Updated: 2022/05/26 14:42:23 by mlarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,10 @@ void	ft_print_think(t_one_philo *p)
 	// 	return ;
 	pthread_mutex_lock(&p->set->mutex_print);
 	time = ft_get_time_now();
+	pthread_mutex_lock(&p->set->mutex_life);
 	if (p->set->life == 1)
 		printf("%lld %d is thinking\n", time, p->name);
+	pthread_mutex_unlock(&p->set->mutex_life);
 	pthread_mutex_unlock(&p->set->mutex_print);
 }
 
@@ -33,8 +35,10 @@ void	ft_print_sleep(t_one_philo *p)
 	// 	return ;	
 	time = ft_get_time_now();
 	pthread_mutex_lock(&p->set->mutex_print);
+	pthread_mutex_lock(&p->set->mutex_life);
 	if (p->set->life == 1)
 		printf("%lld %d is sleeping\n", time, p->name);
+	pthread_mutex_unlock(&p->set->mutex_life);
 	pthread_mutex_unlock(&p->set->mutex_print);
 }
 
@@ -46,8 +50,10 @@ void	ft_print_eat(t_one_philo *p)
 	// 	return ;	
 	time = ft_get_time_now();
 	pthread_mutex_lock(&p->set->mutex_print);
+	pthread_mutex_lock(&p->set->mutex_life);
 	if (p->set->life == 1)
 		printf("%lld %d is eating\n", time, p->name);
+	pthread_mutex_unlock(&p->set->mutex_life);
 	pthread_mutex_unlock(&p->set->mutex_print);
 }
 
@@ -60,8 +66,10 @@ void	ft_print_forks(t_one_philo *p)
 	// 	return ;	
 	time = ft_get_time_now();
 	pthread_mutex_lock(&p->set->mutex_print);
+	pthread_mutex_lock(&p->set->mutex_life);
 	if (p->set->life == 1)
 		printf("%lld %d has taken a fork\n", time, p->name);
+	pthread_mutex_unlock(&p->set->mutex_life);
 	pthread_mutex_unlock(&p->set->mutex_print);
 }
 
