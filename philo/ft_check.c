@@ -6,7 +6,7 @@
 /*   By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/28 17:30:34 by mlarra            #+#    #+#             */
-/*   Updated: 2022/05/26 16:14:32 by mlarra           ###   ########.fr       */
+/*   Updated: 2022/05/27 12:47:14 by mlarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ int	ft_check_arg(int ac, char **av)
 
 	if (ac < 5 || ac > 6)
 		return (1);
-	if (ft_atoi(av[1]) < 2)
-		return (1);
+	// if (ft_atoi(av[1]) < 2)
+	// 	return (1);
 	i = 0;
 	while (av[++i])
 	{
