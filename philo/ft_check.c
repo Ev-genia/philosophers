@@ -6,7 +6,7 @@
 /*   By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/28 17:30:34 by mlarra            #+#    #+#             */
-/*   Updated: 2022/05/27 16:46:06 by mlarra           ###   ########.fr       */
+/*   Updated: 2022/05/27 22:44:52 by mlarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,16 +90,16 @@ void	*ft_check_live(void *philos)
 		i = 0;
 		while (i < ph->set->n_phs)
 		{
-			if (ft_check_die(&ph->phs[i]))
+			if (ft_check_die(&ph->phs[i])
+				|| (ph->set->must_eat != -1 && ft_all_eat(ph)))
 			{
 				pthread_mutex_lock(&ph->set->mutex_life);
 				ph->set->life = 0;
 				pthread_mutex_unlock(&ph->set->mutex_life);
-				ft_print_die(&ph->phs[i]);
+				if (ft_check_die(&ph->phs[i]))
+					ft_print_die(&ph->phs[i]);
 				return (NULL);
 			}
-			if (ph->set->must_eat != -1 && ft_all_eat(ph))
-				return (NULL);
 			i++;
 		}
 	}

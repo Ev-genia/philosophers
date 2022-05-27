@@ -6,7 +6,7 @@
 /*   By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 12:59:31 by mlarra            #+#    #+#             */
-/*   Updated: 2022/05/27 16:51:32 by mlarra           ###   ########.fr       */
+/*   Updated: 2022/05/27 22:44:16 by mlarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,6 @@ void	*ft_start_philo(void *p)
 			return (NULL);
 		ft_take_forks(ph);
 		if (ft_validate_life(ph->set) == 0)
-			return (NULL);
-		if (ph->set->must_eat != -1 && ph->total_eat == ph->set->must_eat)
 			return (NULL);
 		ft_philo_sleep(ph);
 		ft_print_logs(p, "is thinking");
@@ -111,12 +109,9 @@ int	main(int argc, char **argv)
 	}
 	ft_init_set(phils, argv);
 	ft_create_threads(phils);
-	i = 0;
-	while (i < phils->set->n_phs)
-	{
+	i = -1;
+	while (++i < phils->set->n_phs)
 		pthread_join(*phils->phs[i].thread_ph, NULL);
-		i++;
-	}
 	pthread_join(phils->set->thread_live, NULL);
 	ft_mutex_destroy(phils);
 	ft_free_all(phils);

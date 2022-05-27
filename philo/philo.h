@@ -6,7 +6,7 @@
 /*   By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 12:59:25 by mlarra            #+#    #+#             */
-/*   Updated: 2022/05/27 16:45:05 by mlarra           ###   ########.fr       */
+/*   Updated: 2022/05/27 22:31:28 by mlarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@
 # include <sys/time.h>
 
 typedef long long int	t_llint;
-typedef pthread_mutex_t t_mutex;
-typedef struct s_set//settings
+typedef pthread_mutex_t	t_mutex;
+typedef struct s_set
 {
 	t_llint		n_phs;
 	t_llint		t_die;
@@ -35,7 +35,7 @@ typedef struct s_set//settings
 	pthread_t	thread_live;
 }	t_set;
 
-typedef struct s_one_philo//struct of one philosopher
+typedef struct s_one_philo
 {
 	int			name;
 	int			num;
@@ -43,24 +43,19 @@ typedef struct s_one_philo//struct of one philosopher
 	int			l_fork_id;
 	int			r_fork_id;
 	int			total_eat;
-	t_set		*set;//pointer to settings
+	t_set		*set;
 	pthread_t	*thread_ph;
 	t_mutex		mutex_eat;
 }	t_one_philo;
 
 typedef struct s_philos
 {
-	// t_mutex		general_mutex;
-	t_one_philo	*phs;//[200];//array of pointer of philosophers
-	t_set		*set;//pointer to settings
+	t_one_philo	*phs;
+	t_set		*set;
 }	t_philos;
 
-long long int  ft_atoi(const char *str);
+long long int	ft_atoi(const char *str);
 
-// void	ft_print_think(t_one_philo *p);
-// void	ft_print_sleep(t_one_philo *p);
-// void	ft_print_eat(t_one_philo *p);
-// void	ft_print_forks(t_one_philo *p);
 void			ft_print_die(t_one_philo *p);
 void			ft_print(int out, char *s);
 void			ft_print_logs(t_one_philo *p, char *str);
@@ -79,10 +74,6 @@ int				ft_check_arg(int ac, char **av);
 t_philos		*ft_check_malloc(char **av);
 void			*ft_check_live(void *philo);
 int				ft_validate_life(t_set *sett);
-
-// void	ft_print(int out, char *s);
-
-// unsigned long	ft_get_time_now(void);
 
 void			ft_free_all(t_philos *phls);
 

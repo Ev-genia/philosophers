@@ -6,7 +6,7 @@
 /*   By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/28 16:04:02 by mlarra            #+#    #+#             */
-/*   Updated: 2022/05/27 16:59:28 by mlarra           ###   ########.fr       */
+/*   Updated: 2022/05/27 17:15:52 by mlarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,6 @@ t_philos	*ft_malloc_thread(char **av, t_philos *p)
 	phls = ft_malloc_phs(av, p);
 	if (phls == NULL)
 		return (NULL);
-	// phls->phs = malloc(sizeof(t_one_philo) * ft_atoi(av[1]));
-	// if (!phls->phs)
-	// {
-	// 	free(phls);
-	// 	free(phls->set);
-	// 	free(phls->set->forks);
-	// 	return (NULL);
-	// }
 	i = -1;
 	while (++i < ft_atoi(av[1]))
 	{
