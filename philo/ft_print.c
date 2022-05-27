@@ -6,79 +6,49 @@
 /*   By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/28 16:01:40 by mlarra            #+#    #+#             */
-/*   Updated: 2022/05/26 14:42:23 by mlarra           ###   ########.fr       */
+/*   Updated: 2022/05/27 16:46:29 by mlarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	ft_print_think(t_one_philo *p)
-{
-	llint	time;
-
-	// if (p->set->life != 1)
-	// 	return ;
-	pthread_mutex_lock(&p->set->mutex_print);
-	time = ft_get_time_now();
-	pthread_mutex_lock(&p->set->mutex_life);
-	if (p->set->life == 1)
-		printf("%lld %d is thinking\n", time, p->name);
-	pthread_mutex_unlock(&p->set->mutex_life);
-	pthread_mutex_unlock(&p->set->mutex_print);
-}
-
-void	ft_print_sleep(t_one_philo *p)
-{
-	llint	time;
-
-	// if (p->set->life != 1)
-	// 	return ;	
-	time = ft_get_time_now();
-	pthread_mutex_lock(&p->set->mutex_print);
-	pthread_mutex_lock(&p->set->mutex_life);
-	if (p->set->life == 1)
-		printf("%lld %d is sleeping\n", time, p->name);
-	pthread_mutex_unlock(&p->set->mutex_life);
-	pthread_mutex_unlock(&p->set->mutex_print);
-}
-
-void	ft_print_eat(t_one_philo *p)
-{
-	llint	time;
-
-	// if (p->set->life != 1)
-	// 	return ;	
-	time = ft_get_time_now();
-	pthread_mutex_lock(&p->set->mutex_print);
-	pthread_mutex_lock(&p->set->mutex_life);
-	if (p->set->life == 1)
-		printf("%lld %d is eating\n", time, p->name);
-	pthread_mutex_unlock(&p->set->mutex_life);
-	pthread_mutex_unlock(&p->set->mutex_print);
-}
-
-void	ft_print_forks(t_one_philo *p)
-{
-	llint	time;
-
-// printf("p->set->life = %d\n", p->set->life);
-	// if (p->set->life != 1)
-	// 	return ;	
-	time = ft_get_time_now();
-	pthread_mutex_lock(&p->set->mutex_print);
-	pthread_mutex_lock(&p->set->mutex_life);
-	if (p->set->life == 1)
-		printf("%lld %d has taken a fork\n", time, p->name);
-	pthread_mutex_unlock(&p->set->mutex_life);
-	pthread_mutex_unlock(&p->set->mutex_print);
-}
-
 void	ft_print_die(t_one_philo *p)
 {
-	llint	time;
+	t_llint	time;
 
 	pthread_mutex_lock(&p->set->mutex_print);
 	time = ft_get_time_now();
 	printf("%lld %d died\n", time, p->name);
+	pthread_mutex_unlock(&p->set->mutex_print);
+}
+
+void	ft_print(int out, char *s)
+{
+	int	i;
+
+	i = -1;
+	while (s[++i])
+		write(out, &s[i], 1);
+}
+
+int	ft_validate_life(t_set *sett)
+{
+	int	validate;
+
+	pthread_mutex_lock(&sett->mutex_life);
+	validate = sett->life;
+	pthread_mutex_unlock(&sett->mutex_life);
+	return (validate);
+}
+
+void	ft_print_logs(t_one_philo *p, char *str)
+{
+	t_llint	time;
+
+	if (ft_validate_life(p->set) == 0)
+		return ;
+	time = ft_get_time_now();
+	pthread_mutex_lock(&p->set->mutex_print);
+	printf("%lld %d %s\n", time, p->name, str);
 	pthread_mutex_unlock(&p->set->mutex_print);
 }
