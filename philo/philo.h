@@ -6,7 +6,7 @@
 /*   By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 12:59:25 by mlarra            #+#    #+#             */
-/*   Updated: 2022/05/27 22:31:28 by mlarra           ###   ########.fr       */
+/*   Updated: 2022/06/06 10:46:10 by mlarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ typedef struct s_set
 	t_mutex		mutex_print;
 	t_mutex		mutex_life;
 	t_mutex		mutex_t_start;
+	t_mutex		global_mutex;
 	pthread_t	thread_live;
 }	t_set;
 

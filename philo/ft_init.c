@@ -6,7 +6,7 @@
 /*   By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/28 17:29:12 by mlarra            #+#    #+#             */
-/*   Updated: 2022/05/27 16:38:37 by mlarra           ###   ########.fr       */
+/*   Updated: 2022/06/06 10:46:28 by mlarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ void	ft_init_set(t_philos *philos, char **av)
 	else
 		philos->set->must_eat = -1;
 	philos->set->life = 1;
+	pthread_mutex_init(&philos->set->global_mutex, NULL);
 	pthread_mutex_init(&philos->set->mutex_print, NULL);
 	pthread_mutex_init(&philos->set->mutex_life, NULL);
 	pthread_mutex_init(&philos->set->mutex_t_start, NULL);

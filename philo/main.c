@@ -6,7 +6,7 @@
 /*   By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 12:59:31 by mlarra            #+#    #+#             */
-/*   Updated: 2022/05/27 22:44:16 by mlarra           ###   ########.fr       */
+/*   Updated: 2022/06/06 10:52:45 by mlarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,20 @@
 
 void	ft_take_forks(t_one_philo *philo)
 {
+	pthread_mutex_lock(&philo->set->global_mutex);
 	pthread_mutex_lock(&(philo->set->forks[philo->l_fork_id]));
 	ft_print_logs(philo, "has taken a fork");
 	if (philo->set->n_phs == 1)
 	{
 		while (ft_validate_life(philo->set) == 1)
 			usleep(1);
+		pthread_mutex_unlock(&philo->set->global_mutex);
 		pthread_mutex_unlock(&(philo->set->forks[philo->l_fork_id]));
 		return ;
 	}
 	pthread_mutex_lock(&(philo->set->forks[philo->r_fork_id]));
 	ft_print_logs(philo, "has taken a fork");
+	pthread_mutex_unlock(&philo->set->global_mutex);
 	pthread_mutex_lock(&philo->set->mutex_t_start);
 	philo->time_start = ft_get_time_now();
 	pthread_mutex_unlock(&philo->set->mutex_t_start);
