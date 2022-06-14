@@ -6,7 +6,7 @@
 /*   By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 12:59:31 by mlarra            #+#    #+#             */
-/*   Updated: 2022/06/06 10:52:45 by mlarra           ###   ########.fr       */
+/*   Updated: 2022/06/08 15:05:00 by mlarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	*ft_start_philo(void *p)
 		if (ft_validate_life(ph->set) == 0)
 			return (NULL);
 		ft_philo_sleep(ph);
-		ft_print_logs(p, "is thinking");
+		ft_print_logs(ph, "is thinking");
 	}
 	return (NULL);
 }
