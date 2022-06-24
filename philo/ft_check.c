@@ -6,7 +6,7 @@
 /*   By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/28 17:30:34 by mlarra            #+#    #+#             */
-/*   Updated: 2022/05/27 22:44:52 by mlarra           ###   ########.fr       */
+/*   Updated: 2022/06/24 12:26:29 by mlarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,10 +81,8 @@ void	*ft_check_live(void *philos)
 {
 	t_philos	*ph;
 	int			i;
-	t_llint		time;
 
 	ph = philos;
-	time = ft_get_time_now();
 	while (1)
 	{
 		i = 0;
