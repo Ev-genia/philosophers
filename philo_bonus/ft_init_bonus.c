@@ -6,7 +6,7 @@
 /*   By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/08 12:06:39 by mlarra            #+#    #+#             */
-/*   Updated: 2022/06/14 15:31:08 by mlarra           ###   ########.fr       */
+/*   Updated: 2022/06/23 16:11:32 by mlarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,10 @@ void	ft_init_phs(t_one_philo *one_ph, int i, t_set *sett)
 	one_ph->time_start = ft_get_time_now();
 	one_ph->set = sett;
 	one_ph->total_eat = 0;
+	sem_unlink("sem_eat");
+	sem_unlink("sem_time");
+	one_ph->sem_eat = sem_open("sem_eat", O_CREAT, 0644, 1);
+	one_ph->sem_time = sem_open("sem_time", O_CREAT, 0644, 1);
 }
 
 void	ft_init_set(t_one_philo *philos, char **av)
@@ -33,12 +37,16 @@ void	ft_init_set(t_one_philo *philos, char **av)
 		philos->set->must_eat = ft_atoi(av[5]);
 	else
 		philos->set->must_eat = -1;
-	philos->set->live = 1;
-	sem_unlink("print");
-	sem_unlink("forks");
+	philos->set->life = 1;
+	sem_unlink("sem_print");
+	sem_unlink("sem_forks");
+	sem_unlink("sem_living");
+	sem_unlink("sem_died");
 	philos->set->print = sem_open("sem_print", O_CREAT, 0644, 1);
 	philos->set->forks = sem_open("sem_forks", O_CREAT, 0644, 
 		philos->set->n_phs);
+	philos->set->living = sem_open("sem_living", O_CREAT, 0644, 1);
+	philos->set->sem_die = sem_open("sem_died", O_CREAT, 0644, 0);
 	i = -1;
 	while (++i < philos->set->n_phs)
 		ft_init_phs(&philos[i], i, philos->set);

@@ -6,14 +6,15 @@
 #    By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/21 14:48:13 by mlarra            #+#    #+#              #
-#    Updated: 2022/06/08 12:07:12 by mlarra           ###   ########.fr        #
+#    Updated: 2022/06/23 16:14:27 by mlarra           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	=	philo_bonus
 
 SRC		=	main_bonus.c	ft_check_bonus.c	ft_atoi_bonus.c\
-			ft_print_bonus.c	ft_init_bonus.c
+			ft_print_bonus.c	ft_init_bonus.c	ft_sleep_bonus.c\
+			ft_utils_bonus.c	ft_free_bonus.c
 
 HEADER	=	philo_bonus.h
 

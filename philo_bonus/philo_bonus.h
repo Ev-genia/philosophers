@@ -6,7 +6,7 @@
 /*   By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 11:04:45 by mlarra            #+#    #+#             */
-/*   Updated: 2022/06/08 13:06:58 by mlarra           ###   ########.fr       */
+/*   Updated: 2022/06/23 16:09:31 by mlarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 # include <stdio.h>
 # include <unistd.h>
 # include <stdlib.h>
+# include <sys/time.h>
+# include <signal.h>
 
 typedef long long int	t_llint;
 typedef struct s_set
@@ -26,9 +28,11 @@ typedef struct s_set
 	t_llint		t_eat;
 	t_llint		t_sleep;
 	int			must_eat;
-	int			live;
+	int			life;
 	sem_t		*forks;
 	sem_t		*print;
+	sem_t		*living;
+	sem_t		*sem_die;
 }	t_set;
 
 typedef struct s_one_philo
@@ -37,7 +41,10 @@ typedef struct s_one_philo
 	int			num;
 	t_llint		time_start;
 	int			total_eat;
+	sem_t		*sem_eat;
+	sem_t		*sem_time;
 	t_set		*set;
+	pid_t		pid_num;
 	pthread_t	thread_monitor;
 }	t_one_philo;
 
@@ -48,12 +55,24 @@ typedef struct s_one_philo
 // }	t_philos;
 
 long long int	ft_atoi(const char *str);
-int				ft_check_arg(int ac, char **av);
+
 // ft_print.c
-void	ft_print(int out, char *s);
+void			ft_print(int out, char *s);
+void			ft_print_die(t_one_philo *p);
+void			ft_print_logs(t_one_philo *p, char *str);
+int				ft_validate_life(t_set *sett);
 //ft_init_bonus.c
-void	ft_init_set(t_one_philo *philos, char **av);
+void			ft_init_set(t_one_philo *philos, char **av);
+void			ft_usleep_fix(unsigned long time);
 //ft_utils_bonus.c
 unsigned long	ft_get_time_now(void);
+// ft_check_bonus.c 
+void			*ft_check_live(void *philos);
+int				ft_check_arg(int ac, char **av);
+t_one_philo		*ft_check_malloc(char **av);
+// ft_sleep_bonus.c  
+void			ft_philo_sleep(t_one_philo *ph);
+// ft_free_bonus.c 
+void			ft_free_all(t_one_philo *phil);
 
 #endif
