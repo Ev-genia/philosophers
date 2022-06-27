@@ -6,7 +6,7 @@
 /*   By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/08 11:06:06 by mlarra            #+#    #+#             */
-/*   Updated: 2022/06/24 12:40:31 by mlarra           ###   ########.fr       */
+/*   Updated: 2022/06/27 16:27:54 by mlarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@ void	ft_print_die(t_one_philo *p)
 {
 	t_llint	time;
 
-	sem_wait(p->set->print);
 	time = ft_get_time_now();
+	sem_wait(p->set->print);
 	printf("%lld %d died\n", time, p->name);
 	sem_post(p->set->print);
 }

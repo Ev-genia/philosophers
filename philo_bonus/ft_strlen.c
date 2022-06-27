@@ -1,20 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_sleep_bonus.c                                   :+:      :+:    :+:   */
+/*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/06/14 17:12:52 by mlarra            #+#    #+#             */
-/*   Updated: 2022/06/27 16:09:42 by mlarra           ###   ########.fr       */
+/*   Created: 2021/10/16 11:38:20 by mlarra            #+#    #+#             */
+/*   Updated: 2022/06/27 15:32:11 by mlarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-void	ft_philo_sleep(t_one_philo *ph)
+size_t	ft_strlen(const char *s)
 {
-	ft_print_logs(ph, "is sleeping");
-	// ft_usleep_fix(ph->set->t_sleep);
-	usleep(ph->set->t_sleep * 1000);
+	size_t	i;
+
+	i = 0;
+	while (*s)
+	{
+		i++;
+		s++;
+	}
+	return (i);
 }

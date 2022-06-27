@@ -6,7 +6,7 @@
 #    By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/21 14:48:13 by mlarra            #+#    #+#              #
-#    Updated: 2022/06/06 10:55:05 by mlarra           ###   ########.fr        #
+#    Updated: 2022/06/27 10:40:51 by mlarra           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ OBJ		=	${SRC:%.c=%.o}
 
 CFLAGS	=	-Wall -Wextra -Werror #-fsanitize=thread -g
 
-CC		=	gcc
+CC		=	cc
 
 RM		=	rm -f
 

@@ -6,7 +6,7 @@
 /*   By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/08 10:59:03 by mlarra            #+#    #+#             */
-/*   Updated: 2022/06/24 16:30:01 by mlarra           ###   ########.fr       */
+/*   Updated: 2022/06/27 16:27:30 by mlarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,13 @@ t_one_philo	*ft_check_malloc(char **av)
 	phls->set = malloc(sizeof(t_set));
 	if (!phls->set)
 	{
+		free(phls);
+		return (NULL);
+	}
+	phls->set->sem_table = malloc(sizeof(sem_t *) * ft_atoi(av[1]));
+	if (!phls->set->sem_table)
+	{
+		free(phls->set);
 		free(phls);
 		return (NULL);
 	}
@@ -111,16 +118,23 @@ int	ft_check_die(t_one_philo *p)
 void	*ft_check_live(void *philos)
 {
 	t_one_philo	*ph;
+	t_llint		time_start;
 
 	ph = philos;
 	while (1)
 	{
-		if (ft_get_time_now() - ph->time_start > (unsigned long long)ph->set->t_die)
+		sem_wait(ph->sem_time);
+		time_start = ph->time_start;
+		sem_post(ph->sem_time);
+		if (ft_get_time_now() - time_start > (unsigned long long)ph->set->t_die)
 		{
+// printf("ft_get_time_now() = %lu, time_start = %llu, (unsigned long long)ph->set->t_die = %llu\n", ft_get_time_now(), time_start, (unsigned long long)ph->set->t_die);
 			sem_wait(ph->set->living);
 			ph->set->life = 0;
-			sem_post(ph->set->sem_die);
+// printf("before sem_die ft_check\n");
 			ft_print_die(ph);
+			sem_post(ph->set->sem_die);
+// printf("after sem_die ft_check\n");
 			return (NULL);
 		}
 	}

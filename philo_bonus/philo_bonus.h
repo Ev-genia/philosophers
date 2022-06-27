@@ -6,7 +6,7 @@
 /*   By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 11:04:45 by mlarra            #+#    #+#             */
-/*   Updated: 2022/06/24 16:18:12 by mlarra           ###   ########.fr       */
+/*   Updated: 2022/06/27 15:53:15 by mlarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ typedef struct s_set
 	sem_t		*print;
 	sem_t		*living;
 	sem_t		*sem_die;
+	sem_t		**sem_table;
 }	t_set;
 
 typedef struct s_one_philo
@@ -55,6 +56,9 @@ typedef struct s_one_philo
 // }	t_philos;
 
 long long int	ft_atoi(const char *str);
+char	*ft_itoa(int n);
+char	*ft_strjoin(char const *s1, char const *s2);
+size_t	ft_strlen(const char *s);
 
 // ft_print.c
 void			ft_print(int out, char *s);
@@ -74,5 +78,7 @@ t_one_philo		*ft_check_malloc(char **av);
 void			ft_philo_sleep(t_one_philo *ph);
 // ft_free_bonus.c 
 void			ft_free_all(t_one_philo *phil);
+
+char	*make_semaphore_name(int num);
 
 #endif

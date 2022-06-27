@@ -1,20 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_sleep_bonus.c                                   :+:      :+:    :+:   */
+/*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/06/14 17:12:52 by mlarra            #+#    #+#             */
-/*   Updated: 2022/06/27 16:09:42 by mlarra           ###   ########.fr       */
+/*   Created: 2021/10/20 11:27:12 by mlarra            #+#    #+#             */
+/*   Updated: 2022/06/27 15:31:07 by mlarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-void	ft_philo_sleep(t_one_philo *ph)
+char	*ft_strjoin(char const *s1, char const *s2)
 {
-	ft_print_logs(ph, "is sleeping");
-	// ft_usleep_fix(ph->set->t_sleep);
-	usleep(ph->set->t_sleep * 1000);
+	char	*dest;
+	int		i;
+	int		j;
+
+	if (!s1 || !s2)
+		return (NULL);
+	dest = (char *)malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
+	if (dest == NULL)
+		return (NULL);
+	i = 0;
+	while (s1[i] != '\0')
+	{
+		dest[i] = s1[i];
+		i++;
+	}
+	j = 0;
+	while (s2[j] != '\0')
+	{
+		dest[i] = s2[j];
+		j++;
+		i++;
+	}
+	dest[i] = '\0';
+	return (dest);
 }
