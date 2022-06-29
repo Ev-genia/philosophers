@@ -16,6 +16,7 @@ int	ft_one_philo(t_one_philo *philo)
 {
 	if (philo->set->n_phs == 1)
 	{
+		ft_print_logs(philo, "has taken a fork");
 		while (ft_validate_life(philo->set) == 1)
 			usleep(1);
 		return (1);

@@ -79,24 +79,6 @@ void	*ft_start_philo(t_one_philo *ph)
 	return (NULL);
 }
 
-// void	*ft_eats(void *phils)
-// {
-// 	t_one_philo	*phs;
-// 	t_set		*set;
-// 	int			i;
-
-// 	phs = phils;
-// 	set = phs[0].set;
-// 	if (set->must_eat == -1)
-// 		return (NULL);
-// 	phs = phils;
-// 	i = -1;
-// 	while (++i < set->n_phs)
-// 		sem_wait(phs[i].sem_eat);
-// 	sem_post(phs->set->sem_die);
-// 	return (NULL);
-// }
-
 void	ft_create_philo(t_one_philo *philos)
 {
 	int			i;
@@ -124,27 +106,6 @@ void	ft_create_philo(t_one_philo *philos)
 	pthread_create(&eats, NULL, ft_eats, philos);
 	pthread_detach(eats);
 }
-
-// void	*ft_wait(void *philos)
-// {
-// 	t_one_philo*	phs;
-// 	t_set	*sett;
-// 	int		i;
-// 	int		status;
-
-// 	phs = philos;
-// 	sett = phs[0].set;
-// 	i = -1;
-// 	while (waitpid(-1, &status, 0) > 0)
-// 	{
-// 		if (WEXITSTATUS(status))
-// 		{
-// 			while (++i < sett->n_phs)
-// 				kill(phs[i].pid_num, SIGTERM);
-// 		}
-// 	}
-// 	return (NULL);
-// }
 
 int	main(int argc, char **argv)
 {
