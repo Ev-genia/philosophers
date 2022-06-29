@@ -22,9 +22,9 @@ void	ft_take_forks(t_one_philo *philo)
 		return ;
 	}
 	wait_for_fork(philo, philo->l_fork_id);
-	wait_for_fork(philo, philo->r_fork_id);
 	pthread_mutex_lock(&philo->set->forks[philo->l_fork_id].mutex_usage);
 	ft_print_logs(philo, "has taken a fork");
+	wait_for_fork(philo, philo->r_fork_id);
 	pthread_mutex_lock(&philo->set->forks[philo->r_fork_id].mutex_usage);
 	ft_print_logs(philo, "has taken a fork");
 	set_fork_last_taken_by(philo, philo->l_fork_id);

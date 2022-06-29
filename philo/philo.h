@@ -63,7 +63,6 @@ typedef struct s_philos
 	t_set		*set;
 }	t_philos;
 
-// long long int	ft_atoi(const char *str);
 int			ft_atoi(const char *str);
 
 void		ft_print_die(t_one_philo *p);
