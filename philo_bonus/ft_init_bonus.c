@@ -12,19 +12,6 @@
 
 #include "philo_bonus.h"
 
-// void	ft_init_phs(t_one_philo *one_ph, int i, t_set *sett)
-// {
-// 	one_ph->num = i;
-// 	one_ph->name = one_ph->num + 1;
-// 	one_ph->time_start = ft_get_time_now();
-// 	one_ph->set = sett;
-// 	one_ph->total_eat = 0;
-// 	sem_unlink("sem_eat");
-// 	sem_unlink("sem_time");
-// 	one_ph->sem_eat = sem_open("sem_eat", O_CREAT, 0644, 1);
-// 	one_ph->sem_time = sem_open("sem_time", O_CREAT, 0644, 1);
-// }
-
 sem_t	*open_semaphore(char *name, int val)
 {
 	sem_t	*i;

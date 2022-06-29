@@ -27,7 +27,7 @@ CC		=	cc
 
 RM		=	rm -f
 
-.PHONY	:	all	clean	fclean	re	norm	#bonus
+.PHONY	:	all	clean	fclean	re	norm
 
 %.o	:	%.c	${HEADER}
 	${CC} ${CFLAGS} -c $< -o $@
