@@ -6,26 +6,24 @@
 /*   By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/08 12:06:39 by mlarra            #+#    #+#             */
-/*   Updated: 2022/06/27 15:35:07 by mlarra           ###   ########.fr       */
+/*   Updated: 2022/06/28 17:23:12 by mlarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-void	ft_init_phs(t_one_philo *one_ph, int i, t_set *sett)
-{
-	one_ph->num = i;
-	one_ph->name = one_ph->num + 1;
-	one_ph->time_start = ft_get_time_now();
-	one_ph->set = sett;
-	one_ph->total_eat = 0;
-	sem_unlink("sem_eat");
-	sem_unlink("sem_time");
-	one_ph->sem_eat = sem_open("sem_eat", O_CREAT, 0644, 1);
-	one_ph->sem_time = sem_open("sem_time", O_CREAT, 0644, 1);
-}
-
-
+// void	ft_init_phs(t_one_philo *one_ph, int i, t_set *sett)
+// {
+// 	one_ph->num = i;
+// 	one_ph->name = one_ph->num + 1;
+// 	one_ph->time_start = ft_get_time_now();
+// 	one_ph->set = sett;
+// 	one_ph->total_eat = 0;
+// 	sem_unlink("sem_eat");
+// 	sem_unlink("sem_time");
+// 	one_ph->sem_eat = sem_open("sem_eat", O_CREAT, 0644, 1);
+// 	one_ph->sem_time = sem_open("sem_time", O_CREAT, 0644, 1);
+// }
 
 sem_t	*open_semaphore(char *name, int val)
 {
@@ -47,40 +45,65 @@ char	*make_semaphore_name(int num)
 	return (sem_name);
 }
 
-void	ft_init_set(t_one_philo *philos, char **av)
+t_one_philo	*ft_init_phs(t_set *set)
 {
-	int	i;
-	char	*sem_name;
+	t_one_philo	*philos;
+	int			i;
 
-	philos->set->n_phs = ft_atoi(av[1]);
-	philos->set->t_die = ft_atoi(av[2]);
-	philos->set->t_eat = ft_atoi(av[3]);
-	philos->set->t_sleep = ft_atoi(av[4]);
-	if (av[5])
-		philos->set->must_eat = ft_atoi(av[5]);
-	else
-		philos->set->must_eat = -1;
-	philos->set->life = 1;
-	sem_unlink("sem_print");
-	sem_unlink("sem_forks");
-	sem_unlink("sem_living");
-	sem_unlink("sem_died");
-	philos->set->print = sem_open("sem_print", O_CREAT, 0644, 1);
-	philos->set->forks = sem_open("sem_forks", O_CREAT, 0644, 
-		philos->set->n_phs);
-	philos->set->living = sem_open("sem_living", O_CREAT, 0644, 1);
-	philos->set->sem_die = sem_open("sem_died", O_CREAT, 0644, 0);
-	i = -1;
-	while (++i < philos->set->n_phs)
+	philos = malloc(sizeof(t_one_philo) * set->n_phs);
+	if (!philos)
 	{
-		sem_name = make_semaphore_name(i);
-		philos->set->sem_table[i] = open_semaphore(sem_name, i % 2);
-		free(sem_name);
-		// if (philos->set->sem_table[i] < 0)
-		// 	return (1);
-		i++;
+		free(set->sem_table);
+		return (NULL);
 	}
 	i = -1;
-	while (++i < philos->set->n_phs)
-		ft_init_phs(&philos[i], i, philos->set);
+	while (++i < set->n_phs)
+	{
+		philos[i].num = i;
+		philos[i].name = philos[i].num + 1;
+		philos[i].total_eat = 0;
+		philos[i].set = set;
+		philos[i].sem_eat = open_semaphore("sem_eat", 0);
+		philos[i].sem_time = open_semaphore("sem_time", 1);
+		philos[i].time_start = ft_get_time_now();
+	}
+	return (philos);
+}
+
+void	ft_open_sems(t_set *set)
+{
+	set->print = open_semaphore("sem_print", 1);
+	set->forks = open_semaphore("sem_forks", set->n_phs);
+	set->living = open_semaphore("sem_living", 1);
+	set->sem_die = open_semaphore("sem_died", 0);
+	set->sem_start = open_semaphore("sem_start", 0);
+	set->sem_end = open_semaphore("sem_end", 0);
+}
+
+t_one_philo	*ft_init(char **av, t_set *set)
+{
+	int			i;
+	char		*sem_name;
+
+	set->n_phs = ft_atoi(av[1]);
+	set->t_die = ft_atoi(av[2]);
+	set->t_eat = ft_atoi(av[3]);
+	set->t_sleep = ft_atoi(av[4]);
+	if (av[5])
+		set->must_eat = ft_atoi(av[5]);
+	else
+		set->must_eat = -1;
+	set->life = 1;
+	ft_open_sems(set);
+	set->sem_table = malloc(sizeof(sem_t *) * set->n_phs);
+	if (!set->sem_table)
+		return (NULL);
+	i = -1;
+	while (++i < set->n_phs)
+	{
+		sem_name = make_semaphore_name(i);
+		set->sem_table[i] = open_semaphore(sem_name, i % 2);
+		free(sem_name);
+	}
+	return (ft_init_phs(set));
 }
