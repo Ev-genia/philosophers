@@ -6,7 +6,7 @@
 /*   By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/28 16:01:40 by mlarra            #+#    #+#             */
-/*   Updated: 2022/05/27 16:46:29 by mlarra           ###   ########.fr       */
+/*   Updated: 2022/06/29 00:37:06 by mlarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	ft_print_die(t_one_philo *p)
 
 	pthread_mutex_lock(&p->set->mutex_print);
 	time = ft_get_time_now();
-	printf("%lld %d died\n", time, p->name);
+	printf("%ld %d died\n", time, p->name);
 	pthread_mutex_unlock(&p->set->mutex_print);
 }
 
@@ -49,6 +49,6 @@ void	ft_print_logs(t_one_philo *p, char *str)
 		return ;
 	time = ft_get_time_now();
 	pthread_mutex_lock(&p->set->mutex_print);
-	printf("%lld %d %s\n", time, p->name, str);
+	printf("%ld %d %s\n", time, p->name, str);
 	pthread_mutex_unlock(&p->set->mutex_print);
 }

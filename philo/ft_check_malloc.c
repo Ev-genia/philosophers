@@ -6,7 +6,7 @@
 /*   By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/28 16:04:02 by mlarra            #+#    #+#             */
-/*   Updated: 2022/05/27 17:15:52 by mlarra           ###   ########.fr       */
+/*   Updated: 2022/06/28 22:18:41 by mlarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ t_philos	*ft_check_malloc(char **av)
 		free(phls);
 		return (NULL);
 	}
-	phls->set->forks = malloc(sizeof(pthread_mutex_t) * ft_atoi(av[1]));
+	phls->set->forks = malloc(sizeof(t_fork) * ft_atoi(av[1]));
 	if (!phls->set->forks)
 	{
 		free(phls);

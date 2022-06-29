@@ -6,20 +6,20 @@
 #    By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/21 14:48:13 by mlarra            #+#    #+#              #
-#    Updated: 2022/06/27 10:40:51 by mlarra           ###   ########.fr        #
+#    Updated: 2022/06/29 00:20:02 by mlarra           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	=	philo
 
 SRC		=	main.c	ft_atoi.c	ft_check.c	ft_free.c	ft_init.c\
-			ft_print.c	ft_sleep.c	ft_utils.c	ft_check_malloc.c	
+			ft_print.c	ft_sleep.c	ft_utils.c	ft_check_malloc.c	ft_forks.c
 
 HEADER	=	philo.h
 
 OBJ		=	${SRC:%.c=%.o}
 
-CFLAGS	=	-Wall -Wextra -Werror #-fsanitize=thread -g
+CFLAGS	=	-Wall -Wextra -Werror
 
 CC		=	cc
 

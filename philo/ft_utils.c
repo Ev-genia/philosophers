@@ -6,7 +6,7 @@
 /*   By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/28 17:33:56 by mlarra            #+#    #+#             */
-/*   Updated: 2022/05/27 16:33:25 by mlarra           ###   ########.fr       */
+/*   Updated: 2022/06/28 22:19:02 by mlarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,10 @@ void	ft_usleep_fix(unsigned long time)
 		usleep(1);
 }
 
-unsigned long	ft_get_time_now(void)
+long int	ft_get_time_now(void)
 {
 	struct timeval	time;
-	unsigned long	rez;
 
 	gettimeofday(&time, NULL);
-	rez = time.tv_sec * 1000 + time.tv_usec / 1000;
-	return (rez);
+	return ((long int) time.tv_sec * 1000 + time.tv_usec / 1000);
 }

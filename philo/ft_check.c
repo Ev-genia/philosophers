@@ -6,7 +6,7 @@
 /*   By: mlarra <mlarra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/28 17:30:34 by mlarra            #+#    #+#             */
-/*   Updated: 2022/06/24 12:26:29 by mlarra           ###   ########.fr       */
+/*   Updated: 2022/06/29 00:19:16 by mlarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,14 +47,14 @@ int	ft_check_die(t_one_philo *p)
 {
 	t_llint	time;
 
-	pthread_mutex_lock(&p->set->mutex_t_start);
+	pthread_mutex_lock(&p->mutex_time);
 	time = ft_get_time_now();
 	if (time - p->time_start > p->set->t_die)
 	{
-		pthread_mutex_unlock(&p->set->mutex_t_start);
+		pthread_mutex_unlock(&p->mutex_time);
 		return (1);
 	}
-	pthread_mutex_unlock(&p->set->mutex_t_start);
+	pthread_mutex_unlock(&p->mutex_time);
 	return (0);
 }
 
